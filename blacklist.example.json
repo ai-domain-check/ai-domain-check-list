@@ -1,0 +1,23 @@
+[
+  {
+    "domain": "chatgpt-pro-free.com",
+    "reasonCode": "typosquat",
+    "impersonates": "chatgpt.com",
+    "evidence": [
+      "https://example.com/path-to-scam-report",
+      "https://example.com/path-to-screenshot"
+    ],
+    "addedAt": "2026-05-07",
+    "addedBy": "@maintainer-handle"
+  },
+  {
+    "domain": "claude-ai-login.net",
+    "reasonCode": "phishing",
+    "impersonates": "claude.ai",
+    "evidence": [
+      "https://example.com/path-to-phishing-analysis"
+    ],
+    "addedAt": "2026-05-07",
+    "addedBy": "@maintainer-handle"
+  }
+]

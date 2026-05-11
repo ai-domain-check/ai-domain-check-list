@@ -1,0 +1,36 @@
+[
+  {
+    "domain": "openai.com",
+    "publisher": "OpenAI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://openai.com/about",
+      "https://help.openai.com/en/articles/7039943-how-do-i-confirm-i-am-on-the-official-openai-website"
+    ],
+    "addedAt": "2026-05-07",
+    "addedBy": "@maintainer-handle"
+  },
+  {
+    "domain": "chatgpt.com",
+    "publisher": "OpenAI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://openai.com/blog/chatgpt-com-domain-announcement"
+    ],
+    "addedAt": "2026-05-07",
+    "addedBy": "@maintainer-handle"
+  },
+  {
+    "domain": "claude.ai",
+    "publisher": "Anthropic",
+    "category": "llm",
+    "allowSubdomains": false,
+    "evidence": [
+      "https://www.anthropic.com/"
+    ],
+    "addedAt": "2026-05-07",
+    "addedBy": "@maintainer-handle"
+  }
+]
