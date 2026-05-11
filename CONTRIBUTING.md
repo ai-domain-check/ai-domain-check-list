@@ -67,6 +67,18 @@
 
 판단 기준: "이 도메인 안에 누군가가 임의 경로를 만들 수 있는가?" Yes면 `paths` 필수.
 
+**blacklist 쪽에도 같은 규칙이 적용됩니다.** UGC 플랫폼 위의 사칭 페이지(예: `sites.google.com/view/fake-claude`)는 hostname 전체를 blacklist에 넣으면 정상 사용자 페이지까지 빨간 배지가 떠버립니다. 반드시 `paths`로 좁혀주세요.
+
+```json
+{
+  "domain": "sites.google.com",
+  "paths": ["/view/some-fake-claude"],
+  "reasonCode": "phishing",
+  "impersonates": "claude.ai",
+  ...
+}
+```
+
 승인은 메인테이너 2인 이상이 필요하며, 두 명이 같은 출처에 의존하지 않도록 노력합니다.
 
 ## 신고만 하고 싶을 때

@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "domain": "sites.google.com",
+    "paths": ["/view/claudversion09"],
+    "reasonCode": "phishing",
+    "impersonates": "claude.ai",
+    "evidence": [
+      "https://github.com/ai-domain-check/ai-domain-check-list/issues/1"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
+  }
+]

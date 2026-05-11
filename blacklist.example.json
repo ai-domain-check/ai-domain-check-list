@@ -11,13 +11,14 @@
     "addedBy": "@maintainer-handle"
   },
   {
-    "domain": "claude-ai-login.net",
+    "domain": "sites.google.com",
+    "paths": ["/view/example-fake-claude"],
     "reasonCode": "phishing",
     "impersonates": "claude.ai",
     "evidence": [
-      "https://example.com/path-to-phishing-analysis"
+      "https://github.com/ai-domain-check/ai-domain-check-list/issues/1"
     ],
-    "addedAt": "2026-05-07",
+    "addedAt": "2026-05-12",
     "addedBy": "@maintainer-handle"
   }
 ]

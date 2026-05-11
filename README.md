@@ -68,9 +68,29 @@ ai-domain-check-list/
 | `domain` | ✓ | 사칭 도메인 |
 | `reasonCode` | ✓ | `typosquat` / `clone` / `phishing` / `malware` / `other` |
 | `impersonates` |  | 사칭 대상 화이트리스트 도메인 |
+| `allowSubdomains` |  | `true`이면 모든 서브도메인을 같은 사칭 캠페인으로 차단. 기본 `false` |
+| `paths` |  | 경로 prefix 배열. 지정 시 hostname 매칭 후 URL pathname이 이 중 하나로 시작해야 사칭으로 분류. UGC 호스팅(sites.google.com 등)에서 특정 페이지만 차단하고 정상 페이지는 영향 안 받게 할 때 사용. 미지정/빈 배열이면 hostname 단위 차단. |
 | `evidence` | ✓ | 사칭 증거 URL (스크린샷, 신고 내역, 분석 글 등) |
 | `addedAt` | ✓ | 추가 날짜 |
 | `addedBy` |  | 메인테이너 GitHub 핸들 |
+
+### blacklist에 `paths`가 필요한 케이스 — UGC 호스팅 위의 사칭
+
+화이트리스트와 같은 이유로, 사용자 콘텐츠 호스팅 플랫폼(예: `sites.google.com`, `*.notion.site`, `*.vercel.app`) 위에 사칭 페이지가 올라간 경우 hostname 전체를 blacklist에 넣으면 정상 사용자 페이지까지 빨간 배지가 떠 false positive 폭탄이 됩니다. 이런 경우 반드시 `paths`로 좁혀주세요.
+
+```json
+{
+  "domain": "sites.google.com",
+  "paths": ["/view/some-fake-claude"],
+  "reasonCode": "phishing",
+  "impersonates": "claude.ai",
+  "evidence": ["..."]
+}
+```
+
+이러면 그 특정 경로만 빨간색이고, `sites.google.com/view/other-legit-page`는 미확인(노란색)으로 정상 처리됩니다.
+
+판단 기준은 화이트리스트와 동일합니다: "이 도메인 안에 누구든 임의 경로를 만들 수 있는가?" Yes면 `paths` 필수.
 
 ## 기여
 
