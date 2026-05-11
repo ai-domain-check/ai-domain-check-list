@@ -94,11 +94,46 @@
 
 AI Domain Check 크롬 확장프로그램의 popup에서 "신고" 버튼을 누르면 이 템플릿으로 자동 연결되며, 현재 보고 있는 URL이 도메인 필드에 미리 채워집니다.
 
-메인테이너가 검증 후 blacklist PR로 옮깁니다.
+메인테이너가 검증 후 blacklist PR로 옮깁니다 — 단, **이 PR 생성은 GitHub Actions가 자동으로** 합니다 (`.github/workflows/issue-to-blacklist-pr.yml`). 메인테이너 역할은 자동 생성된 PR을 검토·머지하는 것뿐입니다.
 
-### 메인테이너 1회 설정 — 라벨 생성
+### 메인테이너 1회 설정
 
-이슈 템플릿이 자동으로 `domain-report`, `needs-triage` 라벨을 부여합니다. 레포 Settings → Labels에서 이 두 라벨을 미리 만들어주세요. GitHub은 존재하지 않는 라벨을 silently drop하므로, 만들기 전에는 라벨이 안 붙습니다.
+**1. 라벨 생성** — `Issues` 탭 → `Labels` → New label
+
+| 이름 | 색상 | 설명 |
+|---|---|---|
+| `domain-report` | `#ef4444` | 사칭 의심 도메인 신고 / Suspicious domain impersonation report |
+| `needs-triage` | `#f59e0b` | 메인테이너 초기 검토 대기 / Awaiting maintainer triage |
+| `blacklist-pr` | `#7c3aed` | 자동 생성된 blacklist 추가 PR / Auto-drafted blacklist PR |
+| `needs-review` | `#3b82f6` | 메인테이너 검토 필요 / Awaiting maintainer review |
+
+GitHub은 존재하지 않는 라벨을 silently drop하므로 미리 만들어두세요.
+
+**2. Actions가 PR을 만들 수 있게 권한 허용** — Settings → Actions → General:
+
+- "Workflow permissions" 섹션에서 **Read and write permissions** 선택
+- **Allow GitHub Actions to create and approve pull requests** 체크
+
+이 설정 안 하면 워크플로가 PR 생성 단계에서 권한 오류로 실패합니다.
+
+### 자동 PR 워크플로 동작 방식
+
+이슈가 `domain-report` 라벨로 생성되면:
+
+1. 워크플로가 이슈 본문(폼 출력)을 파싱해 `domain`, `paths`, `impersonates` 추출
+2. URL이면 hostname과 pathname을 자동 분리 (UGC 플랫폼 대응)
+3. `reasonCode`는 기본 `phishing`으로 설정 (메인테이너가 PR에서 조정 가능)
+4. blacklist.json에 entry 추가하고 새 브랜치에 커밋
+5. PR 생성: 제목·본문에 원 이슈 링크 + 체크리스트 자동 포함
+6. PR에 `blacklist-pr` + `needs-review` 라벨 자동 부여
+
+메인테이너는 PR을 열어 4가지만 확인하면 됩니다:
+- domain/paths가 정확한지
+- reasonCode가 phishing이 맞는지 (아니면 typosquat 등으로 변경)
+- impersonates 매칭이 맞는지
+- evidence가 충분한지 (스크린샷 추가 등)
+
+문제없으면 머지. 다음 fetch 사이클(최대 6시간, popup 새로고침/페이지 reload 시 즉시)에 모든 사용자에게 반영됩니다.
 
 ## 거부되는 PR 패턴
 

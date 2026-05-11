@@ -1,0 +1,135 @@
+name: Issue → Blacklist PR
+
+# domain-report 라벨이 붙은 이슈가 생성되면 폼 내용을 파싱해 blacklist.json에 추가하는 PR을 자동 생성.
+# 메인테이너는 PR을 검토·필요시 reasonCode 등 조정·머지만 하면 됨.
+
+on:
+  issues:
+    types: [opened, labeled, reopened]
+
+jobs:
+  draft-blacklist-pr:
+    # domain-report 라벨이 붙은 이슈에만 동작
+    if: contains(github.event.issue.labels.*.name, 'domain-report')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate blacklist entry from issue body
+        uses: actions/github-script@v7
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        with:
+          script: |
+            const fs = require('fs');
+            const body = process.env.ISSUE_BODY || '';
+            const issueNumber = process.env.ISSUE_NUMBER;
+            const issueAuthor = process.env.ISSUE_AUTHOR;
+
+            // GitHub Issue Forms는 '### {label}\n\n{value}\n\n' 형식으로 본문을 생성.
+            // 라벨 텍스트로 매칭 — 폼의 한국어 라벨이 바뀌면 여기도 같이 갱신 필요.
+            function getSection(labelRegex) {
+              const re = new RegExp(`###\\s*${labelRegex}\\s*\\n+([\\s\\S]+?)(?=\\n###\\s|$)`, 'i');
+              const m = body.match(re);
+              return m ? m[1].trim() : '';
+            }
+
+            const domainRaw = getSection('신고할 도메인 또는 URL');
+            const impersonatesRaw = getSection('어떤 AI 도구를 사칭하나요\\??');
+
+            if (!domainRaw) {
+              core.setFailed('도메인 필드를 이슈에서 찾지 못했습니다. 폼 라벨이 변경됐는지 확인하세요.');
+              return;
+            }
+
+            // 입력이 URL이면 hostname + pathname으로 분리. 호스트네임만 있으면 paths 생략.
+            let domain;
+            let paths;
+            try {
+              const u = new URL(domainRaw.startsWith('http') ? domainRaw : `https://${domainRaw}`);
+              domain = u.hostname.toLowerCase();
+              if (u.pathname && u.pathname !== '/') {
+                paths = [u.pathname];
+              }
+            } catch (e) {
+              domain = domainRaw.toLowerCase().replace(/^https?:\/\//, '').split('/')[0];
+            }
+
+            // impersonates 필드에서 괄호 안의 공식 도메인 추출. "Claude (claude.ai)" → "claude.ai"
+            let impersonates = impersonatesRaw;
+            const paren = impersonatesRaw.match(/\(([^)]+)\)/);
+            if (paren) impersonates = paren[1].trim();
+
+            // reasonCode는 폼에 명시 필드가 없으므로 기본 phishing.
+            // 메인테이너가 PR 검토 시 typosquat/clone/malware로 조정 가능.
+            const entry = {
+              domain,
+              ...(paths ? { paths } : {}),
+              reasonCode: 'phishing',
+              impersonates: impersonates || undefined,
+              evidence: [
+                `https://github.com/${context.repo.owner}/${context.repo.repo}/issues/${issueNumber}`,
+              ],
+              addedAt: new Date().toISOString().slice(0, 10),
+              addedBy: `@${issueAuthor}`,
+            };
+
+            // undefined 필드 제거 (JSON.stringify가 안 빼주는 경우 대비)
+            for (const k of Object.keys(entry)) {
+              if (entry[k] === undefined) delete entry[k];
+            }
+
+            const blacklistPath = 'blacklist.json';
+            const list = JSON.parse(fs.readFileSync(blacklistPath, 'utf8'));
+
+            // 같은 도메인+paths 조합이 이미 있으면 스킵
+            const duplicate = list.some((e) =>
+              e.domain === entry.domain &&
+              JSON.stringify(e.paths || null) === JSON.stringify(entry.paths || null),
+            );
+            if (duplicate) {
+              core.setFailed(`이미 blacklist에 등록된 entry입니다: ${entry.domain}${entry.paths ? entry.paths.join(',') : ''}`);
+              return;
+            }
+
+            list.push(entry);
+            fs.writeFileSync(blacklistPath, JSON.stringify(list, null, 2) + '\n');
+
+            core.summary
+              .addHeading('드래프트 blacklist entry')
+              .addCodeBlock(JSON.stringify(entry, null, 2), 'json')
+              .write();
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Add blacklist entry from issue #${{ github.event.issue.number }}"
+          title: "[blacklist] Add entry from issue #${{ github.event.issue.number }}"
+          body: |
+            이슈 #${{ github.event.issue.number }}의 신고 내용으로 자동 생성된 blacklist 추가 PR입니다.
+
+            ## 검토 체크리스트
+
+            - [ ] `domain`이 호스트네임 형식인가 (소문자, 프로토콜 없음)
+            - [ ] `paths`가 정확히 사칭 페이지만 좁히고 있는가 (UGC 플랫폼의 경우)
+            - [ ] `reasonCode`가 적절한가 — 기본은 `phishing`. 필요시 `typosquat` / `clone` / `malware` / `other`로 변경
+            - [ ] `impersonates`가 화이트리스트에 있는 공식 도메인과 일치하는가
+            - [ ] `evidence`로 이슈 링크 외에 보강할 스크린샷·whois 등이 있다면 추가
+            - [ ] 신고자 정보가 공개되어 문제 없는지 (`addedBy`)
+
+            머지하시면 다음 fetch 사이클(최대 6시간, popup 새로고침/페이지 reload 시 즉시)에 모든 사용자에게 반영됩니다.
+
+            Closes #${{ github.event.issue.number }}
+          branch: blacklist/issue-${{ github.event.issue.number }}
+          base: main
+          labels: blacklist-pr,needs-review
+          delete-branch: true
