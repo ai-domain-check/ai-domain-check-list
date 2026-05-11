@@ -48,6 +48,18 @@
     "addedBy": "@ai-domain-check"
   },
   {
+    "domain": "claude.com",
+    "publisher": "Anthropic",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://claude.com/product/claude-code",
+      "https://www.anthropic.com/product/claude-code"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
     "domain": "gemini.google.com",
     "publisher": "Google",
     "category": "llm",
