@@ -41,6 +41,31 @@
 - `domain` 값이 소문자·프로토콜 없는 호스트네임 형식인가
 - 이미 등록된 항목과 중복되지 않는가
 - 화이트리스트와 블랙리스트에 동시에 들어가 있지 않은가
+- **사용자 콘텐츠를 호스팅하는 플랫폼이면 `paths` 필드가 적절히 지정되었는가** (아래 참고)
+
+### 사용자 콘텐츠 호스팅 플랫폼은 반드시 `paths`로 좁힐 것
+
+다음과 같이 임의의 사용자 콘텐츠가 같은 도메인 안에 호스팅되는 경우, hostname-only 매칭은 사칭 레포·페이지에 잘못된 "공식" 보증을 줄 위험이 있습니다.
+
+- 코드 호스팅: `github.com`, `gitlab.com`, `bitbucket.org`, `codeberg.org`, `sourceforge.net`
+- AI 모델·데이터 허브: `huggingface.co`, `replicate.com`, `kaggle.com`
+- 문서·페이지 호스팅: `notion.so`, `medium.com`, `substack.com`
+- 기타: 도메인 안에서 사용자가 새 경로를 임의로 만들 수 있는 모든 플랫폼
+
+이런 도메인은 `paths`에 **공식 운영 주체가 제어하는 특정 경로만** 명시해주세요. 예시:
+
+```json
+{
+  "domain": "github.com",
+  "publisher": "GitHub Copilot",
+  "paths": ["/features/copilot", "/settings/copilot"],
+  ...
+}
+```
+
+이러면 `github.com/features/copilot`은 녹색이지만, 누군가 만든 `github.com/fake-org/scam-repo`는 미확인으로 떨어집니다.
+
+판단 기준: "이 도메인 안에 누군가가 임의 경로를 만들 수 있는가?" Yes면 `paths` 필수.
 
 승인은 메인테이너 2인 이상이 필요하며, 두 명이 같은 출처에 의존하지 않도록 노력합니다.
 

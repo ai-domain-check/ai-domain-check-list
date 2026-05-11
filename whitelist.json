@@ -1,1 +1,159 @@
-[]
+[
+  {
+    "domain": "openai.com",
+    "publisher": "OpenAI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://openai.com/about/",
+      "https://en.wikipedia.org/wiki/OpenAI"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "chatgpt.com",
+    "publisher": "OpenAI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://openai.com/index/chatgpt/",
+      "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "anthropic.com",
+    "publisher": "Anthropic",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://www.anthropic.com/",
+      "https://en.wikipedia.org/wiki/Anthropic"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "claude.ai",
+    "publisher": "Anthropic",
+    "category": "llm",
+    "allowSubdomains": false,
+    "evidence": [
+      "https://www.anthropic.com/claude",
+      "https://en.wikipedia.org/wiki/Claude_(language_model)"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "gemini.google.com",
+    "publisher": "Google",
+    "category": "llm",
+    "allowSubdomains": false,
+    "evidence": [
+      "https://gemini.google.com/",
+      "https://support.google.com/gemini/"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "copilot.microsoft.com",
+    "publisher": "Microsoft",
+    "category": "llm",
+    "allowSubdomains": false,
+    "evidence": [
+      "https://copilot.microsoft.com/",
+      "https://www.microsoft.com/en-us/microsoft-copilot/for-individuals/"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "perplexity.ai",
+    "publisher": "Perplexity AI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://www.perplexity.ai/",
+      "https://huggingface.co/perplexity-ai"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "github.com",
+    "publisher": "GitHub Copilot",
+    "category": "code",
+    "allowSubdomains": false,
+    "paths": ["/features/copilot", "/settings/copilot"],
+    "evidence": [
+      "https://github.com/features/copilot",
+      "https://en.wikipedia.org/wiki/GitHub_Copilot"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "cursor.com",
+    "publisher": "Anysphere (Cursor)",
+    "category": "code",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://cursor.com/",
+      "https://en.wikipedia.org/wiki/Cursor_(code_editor)"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "midjourney.com",
+    "publisher": "Midjourney",
+    "category": "image",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://www.midjourney.com/",
+      "https://en.wikipedia.org/wiki/Midjourney"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "elevenlabs.io",
+    "publisher": "ElevenLabs",
+    "category": "audio",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://elevenlabs.io/",
+      "https://en.wikipedia.org/wiki/ElevenLabs"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "suno.com",
+    "publisher": "Suno",
+    "category": "audio",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://suno.com/",
+      "https://suno.com/about"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "runwayml.com",
+    "publisher": "Runway",
+    "category": "video",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://runwayml.com/",
+      "https://runwayml.com/about"
+    ],
+    "addedAt": "2026-05-11",
+    "addedBy": "@ai-domain-check"
+  }
+]

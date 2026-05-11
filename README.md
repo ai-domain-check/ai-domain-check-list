@@ -31,9 +31,35 @@ ai-domain-check-list/
 | `publisher` | ✓ | 운영 주체. 예: `OpenAI` |
 | `category` |  | `llm` / `image` / `audio` / `video` / `code` / `agent` / `other` |
 | `allowSubdomains` |  | `true`이면 모든 서브도메인 허용. 기본값 `false` (완전 일치) |
+| `paths` |  | 경로 prefix 배열. 지정 시 hostname 매칭 후 URL pathname이 이 중 하나로 시작해야 official. 사용자 콘텐츠 호스팅 플랫폼(아래 참고)에서 특정 페이지만 신뢰하고 싶을 때 사용. 미지정/빈 배열이면 hostname-only 매칭. |
 | `evidence` | ✓ | 공식 도메인 증명 URL 1개 이상 (공식 발표·DNS 조회 결과 등) |
 | `addedAt` | ✓ | 추가 날짜 `YYYY-MM-DD` |
 | `addedBy` |  | 메인테이너 GitHub 핸들 |
+
+### `paths`를 언제 써야 하나 — 사용자 콘텐츠 플랫폼 처리
+
+도메인이 임의의 사용자 콘텐츠를 호스팅하는 플랫폼(예: GitHub, GitLab, Hugging Face, Notion, Replicate)이라면 hostname-only 매칭이 위험합니다. 누군가 사칭 레포·페이지·모델을 만들면 우리 확장프로그램이 잘못된 "공식" 보증을 줄 수 있기 때문입니다.
+
+예: `github.com`을 단순 hostname-only로 허용하면 `github.com/fake-openai/whisper-trojan`도 녹색 배지가 떠 사용자가 사칭 레포를 공식으로 오인할 수 있습니다.
+
+이런 도메인은 `paths`를 명시해 **특정 경로만** 공식으로 인정합니다.
+
+```json
+{
+  "domain": "github.com",
+  "publisher": "GitHub Copilot",
+  "paths": ["/features/copilot", "/settings/copilot"],
+  ...
+}
+```
+
+이러면 `github.com/features/copilot`은 녹색이지만 `github.com/anyone/repo`는 미확인으로 떨어집니다.
+
+**경로 매칭 규칙:**
+- pathname이 `paths`의 어느 한 prefix와 정확히 일치하거나, prefix + `/`로 시작하면 매칭
+- `/features/copilot`은 매칭, `/features/copilothelp`는 매칭 안 됨
+- `/features/copilot/setup`은 매칭됨 (하위 경로)
+- 대소문자 무시
 
 ## 블랙리스트 스키마
 
