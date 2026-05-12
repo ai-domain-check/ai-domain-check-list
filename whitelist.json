@@ -100,7 +100,10 @@
     "publisher": "GitHub Copilot",
     "category": "code",
     "allowSubdomains": false,
-    "paths": ["/features/copilot", "/settings/copilot"],
+    "paths": [
+      "/features/copilot",
+      "/settings/copilot"
+    ],
     "evidence": [
       "https://github.com/features/copilot",
       "https://en.wikipedia.org/wiki/GitHub_Copilot"
@@ -167,5 +170,18 @@
     ],
     "addedAt": "2026-05-11",
     "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "deepl.com",
+    "publisher": "DeepL SE",
+    "category": "other",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://www.deepl.com/",
+      "https://en.wikipedia.org/wiki/DeepL_Translator",
+      "https://github.com/ai-domain-check/ai-domain-check-list/issues/3"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@jikor1st"
   }
 ]
