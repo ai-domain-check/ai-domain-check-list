@@ -174,7 +174,7 @@
   {
     "domain": "deepl.com",
     "publisher": "DeepL SE",
-    "category": "other",
+    "category": "translation",
     "allowSubdomains": true,
     "evidence": [
       "https://www.deepl.com/",
@@ -183,5 +183,66 @@
     ],
     "addedAt": "2026-05-12",
     "addedBy": "@jikor1st"
+  },
+  {
+    "domain": "mistral.ai",
+    "publisher": "Mistral AI",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://mistral.ai/",
+      "https://en.wikipedia.org/wiki/Mistral_AI"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "stability.ai",
+    "publisher": "Stability AI",
+    "category": "image",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://stability.ai/",
+      "https://en.wikipedia.org/wiki/Stability_AI"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "cohere.com",
+    "publisher": "Cohere",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://cohere.com/",
+      "https://en.wikipedia.org/wiki/Cohere"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "deepseek.com",
+    "publisher": "DeepSeek",
+    "category": "llm",
+    "allowSubdomains": true,
+    "evidence": [
+      "https://www.deepseek.com/",
+      "https://en.wikipedia.org/wiki/DeepSeek"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
+  },
+  {
+    "domain": "github.com",
+    "publisher": "AI Domain Check",
+    "category": "other",
+    "allowSubdomains": false,
+    "paths": ["/ai-domain-check"],
+    "evidence": [
+      "https://github.com/ai-domain-check/ai-domain-check",
+      "https://github.com/ai-domain-check/ai-domain-check-list"
+    ],
+    "addedAt": "2026-05-12",
+    "addedBy": "@ai-domain-check"
   }
 ]
