@@ -1,0 +1,92 @@
+name: 공식 도메인 등록 요청
+description: AI 도구의 공식 도메인이라고 확인된 사이트를 화이트리스트에 추가해달라고 요청합니다
+title: "[whitelist] "
+labels: ["whitelist-request", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AI 도구의 **공식 도메인**으로 확인된 사이트를 화이트리스트에 추가하려면 작성해주세요.
+        메인테이너가 검증한 뒤 PR로 머지되면 모든 사용자에게 녹색 "공식" 배지가 표시됩니다.
+
+        **추가 기준이 사칭 신고보다 엄격합니다.** 운영 주체가 명확하고 공개적으로 검증 가능해야 합니다.
+        "AI 같은 사이트"라는 추측만으로는 추가하지 않습니다.
+
+  - type: input
+    id: domain
+    attributes:
+      label: 추가할 도메인 또는 URL
+      description: "전체 URL 권장 (예: https://gemini.google.com 또는 https://github.com/features/copilot)"
+      placeholder: example.com
+    validations:
+      required: true
+
+  - type: input
+    id: publisher
+    attributes:
+      label: 운영 주체 (회사·조직)
+      description: 이 도메인을 운영하는 회사·조직의 정확한 명칭
+      placeholder: "예: OpenAI, Anthropic, Google"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 카테고리
+      options:
+        - llm (대화형/언어 모델)
+        - image (이미지 생성·편집)
+        - audio (음성·음악)
+        - video (영상)
+        - code (코딩 도구)
+        - agent (에이전트·자동화)
+        - other (기타)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: allow_subdomains
+    attributes:
+      label: 서브도메인 허용 여부
+      description: "platform.openai.com 같은 서브도메인도 모두 같은 회사가 운영하면 '허용'. 잘 모르시면 '잘 모름' — 메인테이너가 판단합니다."
+      options:
+        - 허용 (모든 서브도메인이 같은 운영 주체)
+        - 미허용 (이 호스트네임 하나만 신뢰)
+        - 잘 모름
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 공식 도메인 증명
+      description: |
+        이 도메인이 정말 해당 회사 소유라는 증거 URL을 적어주세요. 두 개 이상이면 더 좋습니다.
+        - 운영 회사의 공식 블로그·announcement에서 이 도메인을 자기 도메인으로 명시한 페이지
+        - Wikipedia article
+        - 공식 SNS 계정 (인증 마크 있는)이 안내한 게시물
+        - 회사가 직접 운영하는 다른 공식 도메인에서 이 도메인으로 링크
+      placeholder: |
+        - https://...
+        - https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 추가 정보 (선택)
+      description: 이 사이트가 사칭을 자주 당하는지, 알려진 typosquat 도메인이 있는지 등
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: agreements
+    attributes:
+      label: 확인 사항
+      options:
+        - label: 객관적·공개 자료(공식 블로그·Wikipedia·인증 SNS 등)로 검증 가능한 공식 도메인입니다
+          required: true
+        - label: 사용자 콘텐츠 호스팅 플랫폼 자체(notion.site, vercel.app 등)를 추가하려는 게 아닙니다
+          required: true
