@@ -1,180 +1,165 @@
 # 기여 가이드
 
-이 저장소는 AI 도구 사이트의 신뢰도 판정 데이터를 사람이 검토 가능한 JSON 형식으로 관리합니다. 잘못된 항목 하나가 사용자 결제 안전과 직결되므로, 모든 변경은 PR + 메인테이너 2인 승인을 거칩니다.
+크게 두 가지 흐름이 있습니다.
 
-## 변경 유형
+1. **사칭 의심 도메인 신고** — 누구나 (개발자 아니어도) 가능
+2. **공식 도메인 등록 요청** — 누구나 가능, 검증 더 엄격
 
-1. **공식 도메인 추가** — `whitelist.json`에 새 엔트리 추가
-2. **사칭 도메인 추가** — `blacklist.json`에 새 엔트리 추가
-3. **도메인 정보 수정** — publisher 변경, 서브도메인 정책 조정 등
-4. **만료된 항목 제거** — 폐쇄·이전된 공식 사이트 정리
+대부분 시간은 메인테이너가 검토·머지하는 데 들어갑니다. 기여자는 폼만 채우면 됩니다.
 
-## 공식 도메인 PR 절차
+---
 
-1. 이 저장소를 fork합니다.
-2. `whitelist.json`에 엔트리를 추가합니다. 스키마는 `README.md`와 `whitelist.example.json`을 참고해주세요.
-3. **출처 증명을 1개 이상 첨부합니다.** 다음 중 어느 하나여야 합니다.
-   - 운영 주체의 공식 사이트에서 해당 도메인을 자기 도메인으로 명시한 페이지 URL
-   - 공식 블로그·언론 발표
-   - DNS WHOIS 결과(운영 주체 명의 확인 가능한 경우)
-   - 공식 SNS 계정에서 해당 도메인을 안내한 게시물
-4. PR 제목은 `[whitelist] add example.com (OpenAI)` 형식으로 작성해주세요.
-5. PR 본문에 다음을 포함해주세요.
-   - 어떤 AI 도구의 어떤 운영 주체인지
-   - 출처 증명 URL과 그 신뢰성 근거
-   - 서브도메인 허용 여부와 그 이유
+## 1. 사칭 의심 도메인 신고
 
-## 사칭 도메인 PR 절차
+### 가장 빠른 방법
 
-1. 가능하면 먼저 [Issue]로 신고하여 메인테이너가 검증할 수 있도록 해주세요. PR 직접 제출도 가능합니다.
-2. `blacklist.json`에 엔트리를 추가합니다.
-3. **사칭 증거를 첨부합니다.** 다음 중 어느 하나여야 합니다.
-   - 페이지 스크린샷(공식 브랜딩 도용 확인 가능)
-   - 결제 페이지가 공식과 다른 경로/주소로 이동하는 증거
-   - 공식 운영 주체의 사칭 신고 게시물
-   - 보안 분석 글·언론 보도
-4. PR 본문에 어떤 공식 도메인을 사칭하는지 명시해주세요.
+크롬 확장프로그램의 popup에서 노란색·빨간색 배지를 보고 **신고** 버튼을 누르면 도메인이 자동으로 채워진 폼이 새 탭에 열립니다.
 
-## 메인테이너 검토 기준
+### 직접 폼 열기
 
-- 출처 증명이 1개 이상 있고 공개적으로 검증 가능한가
-- `domain` 값이 소문자·프로토콜 없는 호스트네임 형식인가
-- 이미 등록된 항목과 중복되지 않는가
-- 화이트리스트와 블랙리스트에 동시에 들어가 있지 않은가
-- **사용자 콘텐츠를 호스팅하는 플랫폼이면 `paths` 필드가 적절히 지정되었는가** (아래 참고)
+[**사칭 도메인 신고 폼 →**](../../issues/new?template=domain-report.yml)
 
-### 사용자 콘텐츠 호스팅 플랫폼은 반드시 `paths`로 좁힐 것
+### 폼에 적을 내용
 
-다음과 같이 임의의 사용자 콘텐츠가 같은 도메인 안에 호스팅되는 경우, hostname-only 매칭은 사칭 레포·페이지에 잘못된 "공식" 보증을 줄 위험이 있습니다.
+| 필드 | 예시 |
+|---|---|
+| 도메인 또는 URL | `https://sites.google.com/view/claudversion09` |
+| 사칭 대상 | `Claude (claude.ai)` |
+| 발견 경로 | `검색 결과의 광고(Sponsored)` |
+| 증거 | 스크린샷 (본문에 드래그) + 추가 설명 |
 
-- 코드 호스팅: `github.com`, `gitlab.com`, `bitbucket.org`, `codeberg.org`, `sourceforge.net`
-- AI 모델·데이터 허브: `huggingface.co`, `replicate.com`, `kaggle.com`
-- 문서·페이지 호스팅: `notion.so`, `medium.com`, `substack.com`
-- 기타: 도메인 안에서 사용자가 새 경로를 임의로 만들 수 있는 모든 플랫폼
+**개인정보(계정·결제정보)는 본문에 절대 적지 마세요.** 공개 이슈로 모두에게 노출됩니다.
 
-이런 도메인은 `paths`에 **공식 운영 주체가 제어하는 특정 경로만** 명시해주세요. 예시:
+### 제출 후 어떻게 되나요?
+
+폼을 제출하면:
+
+1. 워크플로가 자동으로 PR을 만들어 `blacklist.json`에 추가 제안
+2. 메인테이너가 PR을 검토 (도메인·증거 확인)
+3. 머지되면 6시간 안에 모든 확장프로그램 사용자에게 반영 (popup 새로고침·페이지 reload 시 즉시)
+
+---
+
+## 2. 공식 도메인 등록 요청
+
+확장프로그램이 "미확인(노란색)"으로 표시하는 사이트가 정말 공식이라면 등록을 요청해주세요.
+
+### 가장 빠른 방법
+
+popup의 미확인 상태에서 **"화이트리스트 등록 요청"** 링크 클릭.
+
+### 직접 폼 열기
+
+[**화이트리스트 등록 요청 폼 →**](../../issues/new?template=whitelist-request.yml)
+
+### 폼에 적을 내용
+
+| 필드 | 예시 |
+|---|---|
+| 도메인 또는 URL | `https://example.ai` |
+| 운영 주체 | `Example Corp` |
+| 카테고리 | `llm` / `image` / 등 |
+| 증거 | 공식 announcement, Wikipedia, 인증된 SNS 등 **두 개 이상** |
+
+### 신고보다 엄격한 이유
+
+화이트리스트는 사용자에게 "공식" 보증을 주는 데이터입니다. 잘못 추가되면 사용자가 그 도메인을 신뢰하게 되므로, **두 개 이상의 객관적·공개 검증 가능한 증거**가 필수입니다.
+
+거부되는 패턴:
+- 운영 주체가 불명확
+- 증거가 비공개 자료뿐
+- 사용자 콘텐츠 호스팅 플랫폼 자체(notion.site, vercel.app 등)를 추가하려는 시도
+
+---
+
+## 메인테이너 가이드
+
+<details>
+<summary><strong>1회 설정</strong></summary>
+
+### Actions 권한 활성화
+
+조직 Settings → Actions → General:
+- **Workflow permissions** = `Read and write permissions`
+- ✅ `Allow GitHub Actions to create and approve pull requests`
+
+### 라벨 생성
+
+Actions 탭 → **Setup Labels** → **Run workflow** 클릭.
+
+워크플로가 운영에 필요한 라벨 2개(`domain-report`, `whitelist-request`)를 만들고 GitHub 기본 라벨들을 정리합니다.
+
+</details>
+
+<details>
+<summary><strong>이슈 → PR 자동화 어떻게 동작하나</strong></summary>
+
+이슈가 `domain-report` 또는 `whitelist-request` 라벨로 생성되면 `.github/workflows/issue-to-*-pr.yml`이 자동 실행됩니다.
+
+**워크플로가 하는 일:**
+
+1. 이슈 본문(폼 출력)에서 필드 추출
+2. URL이면 hostname과 pathname 자동 분리
+3. `blacklist.json` 또는 `whitelist.json`에 entry 추가
+4. 새 브랜치에 커밋 후 PR 생성 (제목 prefix `[blacklist]` 또는 `[whitelist]`)
+
+**메인테이너가 하는 일:** PR을 열어 검토하고 머지(또는 거부).
+
+</details>
+
+<details>
+<summary><strong>PR 검토 기준</strong></summary>
+
+### blacklist PR
+
+- [ ] domain·paths가 정확한지
+- [ ] `reasonCode`가 적절한지 (기본 `phishing`, 필요 시 `typosquat` 등으로 수정)
+- [ ] `impersonates`가 화이트리스트의 공식 도메인과 일치하는지
+- [ ] evidence가 검토 가능한지
+
+### whitelist PR (더 엄격)
+
+- [ ] **소유권 검증** — Wikipedia·공식 announcement·whois 등 두 가지 이상 출처로 교차 검증
+- [ ] `publisher` 정확한 회사명
+- [ ] `allowSubdomains` 결정 — 회사가 그 도메인의 모든 서브도메인을 운영하는가
+- [ ] `paths` 필요한가 — UGC 호스팅 위라면 반드시 좁힐 것
+
+</details>
+
+<details>
+<summary><strong>이슈 close 흐름</strong></summary>
+
+- **처리 완료** — PR 머지 시 `Closes #N`이 원 이슈를 자동으로 닫음
+- **사칭 아님 / 공식 미확인** — 이슈에 사유 코멘트 후 close
+- **중복** — GitHub의 "Close as duplicate of #X" 옵션 사용 (close 버튼 드롭다운)
+
+별도 라벨 없이 이슈의 open/closed 상태와 코멘트만으로 추적합니다.
+
+</details>
+
+<details>
+<summary><strong>UGC 호스팅 플랫폼 처리</strong></summary>
+
+도메인이 사용자 콘텐츠 호스팅 플랫폼인 경우, hostname 단위로 화이트리스트·블랙리스트에 넣으면 정상 사용자 페이지까지 잘못 분류됩니다. 반드시 `paths`로 좁히세요.
+
+대표적인 UGC 플랫폼:
+- 코드: `github.com`, `gitlab.com`, `bitbucket.org`, `codeberg.org`
+- 모델·데이터: `huggingface.co`, `replicate.com`, `kaggle.com`
+- 문서: `notion.so`, `medium.com`, `substack.com`
+- 페이지: `sites.google.com`, `*.vercel.app`, `*.notion.site`
+
+판단 기준: **"이 도메인 안에 누구든 임의 경로를 만들 수 있는가?"** Yes면 `paths` 필수.
+
+예시:
 
 ```json
 {
   "domain": "github.com",
   "publisher": "GitHub Copilot",
-  "paths": ["/features/copilot", "/settings/copilot"],
-  ...
+  "paths": ["/features/copilot", "/settings/copilot"]
 }
 ```
 
-이러면 `github.com/features/copilot`은 녹색이지만, 누군가 만든 `github.com/fake-org/scam-repo`는 미확인으로 떨어집니다.
+이러면 `github.com/features/copilot`은 녹색이지만, `github.com/fake-org/scam-repo`는 미확인으로 떨어집니다.
 
-판단 기준: "이 도메인 안에 누군가가 임의 경로를 만들 수 있는가?" Yes면 `paths` 필수.
-
-**blacklist 쪽에도 같은 규칙이 적용됩니다.** UGC 플랫폼 위의 사칭 페이지(예: `sites.google.com/view/fake-claude`)는 hostname 전체를 blacklist에 넣으면 정상 사용자 페이지까지 빨간 배지가 떠버립니다. 반드시 `paths`로 좁혀주세요.
-
-```json
-{
-  "domain": "sites.google.com",
-  "paths": ["/view/some-fake-claude"],
-  "reasonCode": "phishing",
-  "impersonates": "claude.ai",
-  ...
-}
-```
-
-승인은 메인테이너 2인 이상이 필요하며, 두 명이 같은 출처에 의존하지 않도록 노력합니다.
-
-## 신고만 하고 싶을 때
-
-도메인을 직접 PR로 올리기 부담스러우면 **[사칭 도메인 신고 Issue 템플릿](../../issues/new?template=domain-report.yml)** 을 사용해주세요. 폼 형식이라 입력 누락 없이 신고할 수 있습니다.
-
-폼이 받는 정보:
-- 신고할 도메인 또는 URL
-- 사칭 대상 공식 AI 도구
-- 어떻게 발견했는지 (광고/검색/메일 등)
-- 사칭 증거 (스크린샷·외부 링크)
-- 추가 정보 (선택)
-
-AI Domain Check 크롬 확장프로그램의 popup에서 "신고" 버튼을 누르면 이 템플릿으로 자동 연결되며, 현재 보고 있는 URL이 도메인 필드에 미리 채워집니다.
-
-메인테이너가 검증 후 blacklist PR로 옮깁니다 — 단, **이 PR 생성은 GitHub Actions가 자동으로** 합니다 (`.github/workflows/issue-to-blacklist-pr.yml`). 메인테이너 역할은 자동 생성된 PR을 검토·머지하는 것뿐입니다.
-
-### 메인테이너 1회 설정
-
-**1. 라벨 생성** — `Issues` 탭 → `Labels` → New label
-
-| 이름 | 색상 | 설명 |
-|---|---|---|
-| `domain-report` | `#ef4444` | 사칭 의심 도메인 신고 / Suspicious domain impersonation report |
-| `whitelist-request` | `#10b981` | 공식 도메인 등록 요청 / Whitelist addition request |
-| `needs-triage` | `#f59e0b` | 메인테이너 초기 검토 대기 / Awaiting maintainer triage |
-| `blacklist-pr` | `#7c3aed` | 자동 생성된 blacklist 추가 PR / Auto-drafted blacklist PR |
-| `whitelist-pr` | `#0ea5e9` | 자동 생성된 whitelist 추가 PR / Auto-drafted whitelist PR |
-| `needs-review` | `#3b82f6` | 메인테이너 검토 필요 / Awaiting maintainer review |
-| `confirmed` | `#16a34a` | 사실로 확인되어 처리 완료 / Confirmed and processed |
-| `not-confirmed` | `#6b7280` | 검토 결과 확인되지 않음 / Could not confirm |
-| `duplicate` | `#94a3b8` | 중복 신고 / Duplicate report |
-
-GitHub은 존재하지 않는 라벨을 silently drop하므로 미리 만들어두세요.
-
-**2. Actions가 PR을 만들 수 있게 권한 허용** — Settings → Actions → General:
-
-- "Workflow permissions" 섹션에서 **Read and write permissions** 선택
-- **Allow GitHub Actions to create and approve pull requests** 체크
-
-이 설정 안 하면 워크플로가 PR 생성 단계에서 권한 오류로 실패합니다.
-
-### 자동 PR 워크플로 동작 방식 — blacklist
-
-이슈가 `domain-report` 라벨로 생성되면:
-
-1. 워크플로가 이슈 본문(폼 출력)을 파싱해 `domain`, `paths`, `impersonates` 추출
-2. URL이면 hostname과 pathname을 자동 분리 (UGC 플랫폼 대응)
-3. `reasonCode`는 기본 `phishing`으로 설정 (메인테이너가 PR에서 조정 가능)
-4. `blacklist.json`에 entry 추가하고 새 브랜치에 커밋
-5. PR 생성: 제목·본문에 원 이슈 링크 + 체크리스트 자동 포함
-6. PR에 `blacklist-pr` + `needs-review` 라벨 자동 부여
-
-메인테이너는 PR을 열어 4가지만 확인하면 됩니다:
-- domain/paths가 정확한지
-- reasonCode가 phishing이 맞는지 (아니면 typosquat 등으로 변경)
-- impersonates 매칭이 맞는지
-- evidence가 충분한지 (스크린샷 추가 등)
-
-문제없으면 머지. 다음 fetch 사이클(최대 6시간, popup 새로고침/페이지 reload 시 즉시)에 모든 사용자에게 반영됩니다.
-
-### 자동 PR 워크플로 동작 방식 — whitelist
-
-`ai-domain-check` 확장프로그램 popup의 미확인 상태에서 "화이트리스트 등록 요청" 링크 또는 `whitelist-request` 템플릿으로 이슈를 등록하면:
-
-1. 워크플로가 폼 본문에서 `domain`, `publisher`, `category`, `allowSubdomains`, `evidence` 추출
-2. URL이면 hostname과 pathname 자동 분리, evidence URL 정규화
-3. `whitelist.json`에 entry 추가하고 새 브랜치에 커밋
-4. PR 생성 + `whitelist-pr` + `needs-review` 라벨 부여
-
-**whitelist 검토는 blacklist보다 엄격합니다.** 사용자에게 "공식" 보증을 주는 결정이라 잘못 머지하면 잘못된 안심을 주게 됩니다. PR 체크리스트가 더 길고 두 가지 이상 출처로 교차 검증을 요구합니다.
-
-거부 사례가 자주 나오는 패턴:
-- 운영 주체 불명확
-- 증거가 비공개 자료뿐
-- UGC 호스팅 플랫폼 자체를 추가하려는 시도
-- "AI 같은 사이트"라는 추측만 있는 요청
-
-거부 시 PR을 닫고 이슈에 사유를 코멘트한 뒤 `not-confirmed` 라벨을 붙여 이슈도 닫아주세요.
-
-### 이슈 close 흐름
-
-PR이 머지되면 PR 본문의 `Closes #N`이 원 이슈를 자동으로 닫습니다. 메인테이너가 별도로 close할 필요 없습니다.
-
-PR을 거부하는 경우(사칭이 아니거나 공식 검증 실패) 메인테이너가 수동으로:
-1. 이슈에 사유 코멘트
-2. `not-confirmed` 또는 `duplicate` 라벨 부여
-3. 이슈 close
-
-처리가 완료되어 머지된 경우엔 `confirmed` 라벨이 부여되면 좋습니다. 자동화는 안 되어 있어 수동.
-
-## 거부되는 PR 패턴
-
-- 출처 증명이 없거나 검증 불가능한 출처(폐쇄된 사이트, 비공개 자료)인 경우
-- 단순한 의심·추측만으로 블랙리스트 추가 요청한 경우
-- 화이트리스트 도메인이 명백하지 않은데 등록 요청한 경우(예: 중복 운영 주체, 도메인 소유주 불명)
-- 합법 호스팅 플랫폼 자체(`vercel.app`, `notion.site` 등)를 등록하려는 경우
-
-[Issue]: ../../issues
+</details>

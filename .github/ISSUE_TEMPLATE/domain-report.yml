@@ -1,7 +1,7 @@
 name: 사칭/의심 도메인 신고
 description: AI 도구를 사칭하는 것으로 의심되는 도메인을 신고합니다
 title: "[report] "
-labels: ["domain-report", "needs-triage"]
+labels: ["domain-report"]
 body:
   - type: markdown
     attributes:

@@ -1,7 +1,7 @@
 name: 공식 도메인 등록 요청
 description: AI 도구의 공식 도메인이라고 확인된 사이트를 화이트리스트에 추가해달라고 요청합니다
 title: "[whitelist] "
-labels: ["whitelist-request", "needs-triage"]
+labels: ["whitelist-request"]
 body:
   - type: markdown
     attributes:

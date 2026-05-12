@@ -131,5 +131,4 @@ jobs:
             Closes #${{ github.event.issue.number }}
           branch: blacklist/issue-${{ github.event.issue.number }}
           base: main
-          labels: blacklist-pr,needs-review
           delete-branch: true

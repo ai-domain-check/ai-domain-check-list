@@ -155,5 +155,4 @@ jobs:
             Closes #${{ github.event.issue.number }}
           branch: whitelist/issue-${{ github.event.issue.number }}
           base: main
-          labels: whitelist-pr,needs-review
           delete-branch: true
