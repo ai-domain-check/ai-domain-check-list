@@ -1,0 +1,113 @@
+name: Setup Labels
+
+# 운영에 필요한 9개 라벨을 한 번에 생성·동기화하는 일회성 워크플로.
+# Actions 탭 → "Setup Labels" → "Run workflow" 클릭으로 실행.
+# 이미 존재하는 라벨은 색·설명을 명시된 값으로 업데이트(upsert), 신규는 생성.
+# 안전하게 여러 번 돌려도 됨.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Create or update labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              {
+                name: 'domain-report',
+                color: 'ef4444',
+                description: '사칭 의심 도메인 신고 / Suspicious domain impersonation report',
+              },
+              {
+                name: 'whitelist-request',
+                color: '10b981',
+                description: '공식 도메인 등록 요청 / Whitelist addition request',
+              },
+              {
+                name: 'needs-triage',
+                color: 'f59e0b',
+                description: '메인테이너 초기 검토 대기 / Awaiting maintainer triage',
+              },
+              {
+                name: 'blacklist-pr',
+                color: '7c3aed',
+                description: '자동 생성된 blacklist 추가 PR / Auto-drafted blacklist PR',
+              },
+              {
+                name: 'whitelist-pr',
+                color: '0ea5e9',
+                description: '자동 생성된 whitelist 추가 PR / Auto-drafted whitelist PR',
+              },
+              {
+                name: 'needs-review',
+                color: '3b82f6',
+                description: '메인테이너 검토 필요 / Awaiting maintainer review',
+              },
+              {
+                name: 'confirmed',
+                color: '16a34a',
+                description: '사실로 확인되어 처리 완료 / Confirmed and processed',
+              },
+              {
+                name: 'not-confirmed',
+                color: '6b7280',
+                description: '검토 결과 확인되지 않음 / Could not confirm',
+              },
+              {
+                name: 'duplicate',
+                color: '94a3b8',
+                description: '중복 신고 / Duplicate report',
+              },
+            ];
+
+            const { owner, repo } = context.repo;
+            const results = [];
+
+            for (const label of labels) {
+              try {
+                // 존재하는지 확인
+                await github.rest.issues.getLabel({
+                  owner,
+                  repo,
+                  name: label.name,
+                });
+                // 존재하면 업데이트 (색·설명 동기화)
+                await github.rest.issues.updateLabel({
+                  owner,
+                  repo,
+                  name: label.name,
+                  new_name: label.name,
+                  color: label.color,
+                  description: label.description,
+                });
+                results.push(`updated  ${label.name}`);
+              } catch (err) {
+                if (err.status === 404) {
+                  // 신규 생성
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  results.push(`created  ${label.name}`);
+                } else {
+                  results.push(`FAILED   ${label.name}: ${err.message}`);
+                  throw err;
+                }
+              }
+            }
+
+            core.summary
+              .addHeading('Label setup results')
+              .addCodeBlock(results.join('\n'))
+              .write();
+            console.log(results.join('\n'));
